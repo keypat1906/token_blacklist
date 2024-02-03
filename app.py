@@ -6,7 +6,6 @@ black = BlacklistToken()
 
 app = Flask(__name__) 
 
-
 @app.route("/info")
 def info() -> Response:
     '''
