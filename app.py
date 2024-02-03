@@ -35,6 +35,8 @@ def blacklist() -> Response:
     POST - blacklist the token. 
     DELETE - remove the token from blacklist
     '''
+
+    # POST method
     if request.method == 'POST':
         header = request.headers.get("Authorization")
         token = header.split()[1]
@@ -48,6 +50,7 @@ def blacklist() -> Response:
         return jsonify({"success": True, "token": token, \
                          "info":"Token is blacklisted"})
     
+    # DELETE method
     if request.method == 'DELETE':
         header = request.headers.get("Authorization")
         token = header.split()[1]
