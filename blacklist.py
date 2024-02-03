@@ -2,6 +2,7 @@
 # Class to blacklist the tokens
 # User set data structure to store and remove token
 
+
 class BlacklistToken():
 
     def __init__(self):
