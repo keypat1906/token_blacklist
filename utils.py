@@ -2,6 +2,7 @@
 from flask import jsonify 
 import jwt
 
+
 def validate_token(token):
     '''
     function validate the token signature, iss and expiration
