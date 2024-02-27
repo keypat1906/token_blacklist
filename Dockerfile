@@ -8,6 +8,6 @@ RUN pip install -v -r requirements.txt
 COPY . /usr/src/app
 
 # This is required for the Flask cli
-ENV FLASK_APP app.py
+#ENV FLASK_APP=src/app.py
 
-CMD flask run
+CMD flask --app src/app run

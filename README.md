@@ -1,72 +1,122 @@
-# Discogs Recruiting Takehome Assignment: Token Blacklisting
 
-Thanks for applying at Discogs!
+This feature is created to calculate routes for a small pizza chain that recently purchased one drone to deliver their pizzas. Drone range is 25 miles and you can configure that when you create drone object. 
 
-We want to assess your technical ability, but we also think coding under pressure in an interview is a terrible way to do that. As a compromise, here's a takehome exercise that's a simplified version of work you'd be doing at Discogs if you were hired.
+VirtualEnv
+First create the virtualenv using below commands.
 
-Our expectations are that you deliver functional software including readable, concise and maintainable code with some production considerations.
+Install the virtualenv
+pip install virtualenv
 
-If we've made an error so grievous that you don't think you can finish the assignment, or you have any other questions after reviewing this document, feel free to email your contact at Discogs and let us know.
+Initialize the venv in your local dir
+virtualenv venv
 
-## Description of the Problem
+Activate the virtualenv
+source venv/bin/activate
 
-At Discogs, we make use of [JSON Web Tokens (JWTs)](https://jwt.io/introduction) for securely transmitting information between parties.
+Now you are good to install all of your pip packages.
+.//venv/bin/pip install -r requirements.txt
 
-Because JWTs are stateless, by design they cannot be revoked once issued and remain valid until they expire.
+Now the app is ready to test. This app is created in Flask and it has 1 API Endpoint
 
-Your assignment is to create a simple token [blacklisting](https://en.wikipedia.org/wiki/Blacklist_(computing)) management service that can be used to blacklist a given JWT provided by the client so that it can no longer be used by the API.
+Run this command to start the app
 
-## Setup
+flask --app src/app run
 
-In this directory, we've included everything you should need to run a simple Flask-based API using Docker Compose.
+Now your app is running on port 5000
 
-In case you're not too familiar with [Flask](https://flask.palletsprojects.com/en/3.0.x/), [Python](https://www.python.org/), or [Docker](https://www.docker.com/), we've included a sample `/info` API endpoint to illustrate how routing and responses work.
 
-Assuming you have a working Docker installation locally, you should be able to run `docker-compose up` to start the app. Once the app is running, it should be accessible on port `35000` of your docker machine's IP address.
+This code test assumes pizza shop address is = "6138 Bollinger Rd, San Jose, CA 95129" so all the drone delivery will happen from this pizza shop
 
-If you'd like to use a different runtime environment than `Docker` and `Python`, that's totally fine.
-Please include instructions on how to run your application, in that case.
 
-For decoding JWTs, we've included the [PyJWT](https://pyjwt.readthedocs.io/en/stable/) library, although you may use another library if you prefer.
+API Endpoints
 
-To keep things simple, we're using the HS256 signing algorithm and `discogs` as the secret key for creating and verifying JWT signatures.
+1. First endpoint is to calculate the optimal path for given addresses in orders.csv file. I have used Geopy library to calculate the optimal path. 
 
-We've also included a [Postman](https://www.postman.com) collection that can be used to test your API implementation.
+First I fetched the first address from the CSV file and then using the Geopy library, I fetched the nearest address from rest of the addresses, and after fetching that second address, I repeated the processes and I kept getting nearby addresses.
 
-Feel free to provide any feedback about the problem or this prompt, e.g. as comments in your code.
+GET {{server}}//optimal-path
 
-## Requirements
+This return the path the drone should take to deliver 
 
-Please add the following endpoints to this API:
+[
+    [
+        37.30884145,
+        -122.00120797064812
+    ],
+    [
+        37.31989615,
+        -122.01637004809085
+    ],
+    [
+        37.34102688643793,
+        -122.00013308422812
+    ],
+    [
+        37.36113465,
+        -121.98953109648113
+    ]
+]
 
-- A `POST /blacklist` endpoint that can be used to add a given JWT to the blacklist:
-    - On success, subsequent calls to the `/info` API endpoint with the same JWT should return an error response indicating the token is blacklisted.
-    - The return value should be a `JSON` object restating the request parameters and if the blacklisting operation was successful.
-- A `DELETE /blacklist` endpoint that can be used to remove a given JWT from the blacklist:
-    - On success, subsequent calls to the `/info` API endpoint with the same JWT should return a successful response since the token is no longer blacklisted.
-    - The return value should be a `JSON` object restating the request parameters and if the blacklist removal was successful.
 
-Please update the following endpoint in this API:
-- The `GET /info` endpoint should:
-    - Check the token blacklist and return an error response if the provided JWT by the client is blacklisted.
-    - Return a value that is a `JSON` object restating the request parameters and the decoded token contents on success.
+2.  This endpoint provides the authenticate functionality. Currently only user "admin@jbtc.com" is used for authentication.
+This endpoint will return the jwt token which is valid for 1 hour. 
+ 
+POST {{server}}/authenticate
 
-For all API endpoints:
-- Validate that the provided JWT by the client was issued by `https://www.discogs.com/` and has not expired.
-- Require Authorization with the Bearer authentication scheme from the client.
+{
+    "data": "token",
+    "message": "Successfully fetched auth token"
+}
 
-## Tips
-- Keep it simple!
 
-## Submission
+3.
 
-To submit your solution:
-- Create a private Github Repository that contains your code.
-- [Invite](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-access-to-your-personal-repositories/inviting-collaborators-to-a-personal-repository) **anni3f**, **ebenStickney**, **dlowder**, **hexamagus**, and **gbrough** as contributors.
-- Let us know you have finished the solution by emailing your contact at Discogs.
+POST {{server}}/destination?coordinates=37.461449, -121.912258
 
-See you soon, and thank you!
+This endpoint return "success" : True if drone can deliver to given address, otherwise it will return False if drone is out of range for that address.
+{
+    "message": "Drone delivered to address 37.461449, -121.912258 with distance 11.710116663456743",
+    "success": true
+}
 
-Discogs
+If drone is out of range, it will return 500 with message
 
-# token_blacklist
+{
+    "message": "Drone battery will out of range to for address 37.366574, -121.963910"
+}
+
+
+Tests
+
+I have added unit tests to test the endpoints 
+
+To run the test, execute below command
+
+pytest
+
+============================================================= test session starts ===============================================================
+platform darwin -- Python 3.10.9, pytest-8.0.1, pluggy-1.4.0
+rootdir: /JBT-Test/jbt-test
+collected 2 items                                                                                                                                
+
+tests/test_endpoint.py ..                                                                                                                  [100%]
+
+=============================================================== 2 passed in 0.67s ===============================================================
+
+
+Docker
+
+I have included docker-compose file in case you want to create Docker image.
+Run this command to create the docker image
+
+docker-compose up
+
+
+Tests:
+I have included 2 test cases one with success 200 and another with failure (no param) 404.
+
+
+
+Questions/Concerns:
+I used KISS (Keep it Simple,Stupid) principle to create this app. I created utils functinons in separate file. If you have any questions or concerns please reach out to me keyurpatel80@gmail.com
+
