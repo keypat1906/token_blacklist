@@ -14,7 +14,7 @@
 					"jwt": [
 						{
 							"key": "payload",
-							"value": "{ \"sub\": \"1001\", \"iss\": \"https://www.discogs.com/\", \"exp\": 2053218952 }",
+							"value": "{ \"sub\": \"1001\", \"iss\": \"https://www.arc.com/\", \"exp\": 2053218952 }",
 							"type": "string"
 						},
 						{
@@ -29,7 +29,7 @@
 						},
 						{
 							"key": "secret",
-							"value": "discogs",
+							"value": "admin",
 							"type": "string"
 						},
 						{
