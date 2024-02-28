@@ -2,8 +2,6 @@
 
 Our expectations are that you deliver functional software including readable, concise and maintainable code with some production considerations.
 
-If we've made an error so grievous that you don't think you can finish the assignment, or you have any other questions after reviewing this document, feel free to email your contact at Discogs and let us know.
-
 ## Description of the Problem
 
 we make use of [JSON Web Tokens (JWTs)](https://jwt.io/introduction) for securely transmitting information between parties.
