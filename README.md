@@ -1,8 +1,4 @@
-# Discogs Recruiting Takehome Assignment: Token Blacklisting
 
-Thanks for applying at Discogs!
-
-We want to assess your technical ability, but we also think coding under pressure in an interview is a terrible way to do that. As a compromise, here's a takehome exercise that's a simplified version of work you'd be doing at Discogs if you were hired.
 
 Our expectations are that you deliver functional software including readable, concise and maintainable code with some production considerations.
 
@@ -10,7 +6,7 @@ If we've made an error so grievous that you don't think you can finish the assig
 
 ## Description of the Problem
 
-At Discogs, we make use of [JSON Web Tokens (JWTs)](https://jwt.io/introduction) for securely transmitting information between parties.
+we make use of [JSON Web Tokens (JWTs)](https://jwt.io/introduction) for securely transmitting information between parties.
 
 Because JWTs are stateless, by design they cannot be revoked once issued and remain valid until they expire.
 
@@ -29,7 +25,7 @@ Please include instructions on how to run your application, in that case.
 
 For decoding JWTs, we've included the [PyJWT](https://pyjwt.readthedocs.io/en/stable/) library, although you may use another library if you prefer.
 
-To keep things simple, we're using the HS256 signing algorithm and `discogs` as the secret key for creating and verifying JWT signatures.
+To keep things simple, we're using the HS256 signing algorithm and `admin` as the secret key for creating and verifying JWT signatures.
 
 We've also included a [Postman](https://www.postman.com) collection that can be used to test your API implementation.
 
@@ -52,21 +48,9 @@ Please update the following endpoint in this API:
     - Return a value that is a `JSON` object restating the request parameters and the decoded token contents on success.
 
 For all API endpoints:
-- Validate that the provided JWT by the client was issued by `https://www.discogs.com/` and has not expired.
+- Validate that the provided JWT by the client was issued by `https://www.arc.com/` and has not expired.
 - Require Authorization with the Bearer authentication scheme from the client.
 
 ## Tips
 - Keep it simple!
 
-## Submission
-
-To submit your solution:
-- Create a private Github Repository that contains your code.
-- [Invite](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-access-to-your-personal-repositories/inviting-collaborators-to-a-personal-repository) **anni3f**, **ebenStickney**, **dlowder**, **hexamagus**, and **gbrough** as contributors.
-- Let us know you have finished the solution by emailing your contact at Discogs.
-
-See you soon, and thank you!
-
-Discogs
-
-# token_blacklist
